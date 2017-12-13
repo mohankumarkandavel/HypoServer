@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="HypoServer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/HypoServer_jar</output-path>
+    <root id="archive" name="HypoServer.jar">
+      <element id="module-output" name="HypoServer" />
+    </root>
+  </artifact>
+</component>
