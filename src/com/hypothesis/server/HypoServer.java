@@ -7,7 +7,7 @@ class HypoServer {
 	public static void main(String[] args) throws Exception {
 		String fromClient;
 		String toClient;
-		String[] command = { "/bin/sh", "-c","cd /home/HypothesisTest/fejoa/libaray; gradle test"};
+		String[] command = { "/bin/sh", "-c","cd /home/HypothesisTest/fejoa/libaray; java -cp $KOTLIN_LIB/kotlin-runtime.jar:build/libs/kotlin.jar: org.fejoa.Repository.ChunkStoreAccessor.kt"};
 		//String command = "ping -c 3 www.google.com";
 		String line = "";
 
