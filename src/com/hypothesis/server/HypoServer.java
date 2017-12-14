@@ -7,8 +7,8 @@ class HypoServer {
 	public static void main(String[] args) throws Exception {
 		String fromClient;
 		String toClient;
-		//String[] command = { "/bin/sh", "-c","cd /home/fejoa-copy/libaray; gradle test"};
-		String command = "ping -c 3 www.google.com";
+		String[] command = { "/bin/sh", "-c","cd /home/HypothesisTest/fejoa/libaray; gradle test"};
+		//String command = "ping -c 3 www.google.com";
 		String line = "";
 
 		ServerSocket server =  new ServerSocket(8080);
