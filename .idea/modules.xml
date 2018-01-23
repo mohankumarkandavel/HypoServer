@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HypoServer.iml" filepath="$PROJECT_DIR$/HypoServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HypoServer.iml" filepath="$PROJECT_DIR$/.idea/modules/HypoServer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HypoServer_main.iml" filepath="$PROJECT_DIR$/.idea/modules/HypoServer_main.iml" group="HypoServer" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/HypoServer_test.iml" filepath="$PROJECT_DIR$/.idea/modules/HypoServer_test.iml" group="HypoServer" />
     </modules>
   </component>
 </project>
