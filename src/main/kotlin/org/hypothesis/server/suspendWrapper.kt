@@ -8,10 +8,7 @@ import org.fejoa.crypto.CryptoHelper
 import org.fejoa.crypto.CryptoSettings
 import org.fejoa.crypto.SecretKey
 import org.fejoa.crypto.SymBaseCredentials
-import org.fejoa.repository.Commit
-import org.fejoa.repository.CommitSignature
-import org.fejoa.repository.Repository
-import org.fejoa.repository.RepositoryConfig
+import org.fejoa.repository.*
 import org.fejoa.storage.*
 import org.fejoa.support.*
 
@@ -60,6 +57,20 @@ class RepoWrapper(val repository: Repository) {
     fun getHeadCommit():CommitWrapper = run{
         return@run CommitWrapper(repository.getHeadCommit())
     }
+    fun getRepositoryRef(): RepositoryRef = runBlocking {
+        return@runBlocking repository.getRepositoryRef()
+    }
+    fun open(branch: String, ref: RepositoryRef, branchBackend: StorageBackend.BranchBackend,
+    crypto: SymBaseCredentials?): RepoWrapper= runBlocking {
+        return@runBlocking RepoWrapper(Repository.open(branch, ref, branchBackend, crypto))
+    }
+    fun listFiles(path: String): Collection<String> = runBlocking{
+        return@runBlocking repository.listFiles(path)
+    }
+
+    fun listDirectories(path: String): Collection<String>  = runBlocking{
+        return@runBlocking repository.listDirectories(path)
+    }
 
 }
 
@@ -70,12 +81,12 @@ open class suspendFun constructor(val storageBackend: StorageBackend, val secret
         val cleanUpList: MutableList<String> = ArrayList()
         val settings = CryptoSettings.default
         fun create(): suspendFun = runBlocking {
-            val secretKey = CryptoHelper.crypto.generateSymmetricKey(settings.symmetric.key).await()
+            val secretKey = CryptoHelper.crypto.generateSymmetricKey(settings.symmetric)
             val storageBackend = platformCreateStorage("")
             return@runBlocking suspendFun(storageBackend, secretKey)
         }
     }
-
+    val symCredentials = SymBaseCredentials(secretKey!!, settings.symmetric.algo)
     fun storageOpen(dirName:String,branch:String): StorageBackend.BranchBackend = runBlocking { storageBackend?.let {
         val branchBackend = if (it.exists(dirName,branch)) {
             it.open(dirName,branch)
@@ -103,13 +114,19 @@ open class suspendFun constructor(val storageBackend: StorageBackend, val secret
                 boxSpec = boxSpec
         )
     }
-    fun createRepository(dirName:String, branch:String): RepoWrapper {
+    fun createRepository(dirName:String, branch:String): RepoWrapper = runBlocking {
         val backend = storageOpen(dirName, branch)
-        return RepoWrapper(Repository.create(branch, backend,getRepoConfig(), SymBaseCredentials(secretKey!!,settings.symmetric)))
+        return@runBlocking RepoWrapper(Repository.create(branch, backend,getRepoConfig(), SymBaseCredentials(secretKey!!,settings.symmetric.algo)))
     }
     fun add(database: RepoWrapper, content: MutableMap<String, DatabaseStringEntry>, entry: DatabaseStringEntry) = runBlocking{
         content.put(entry.path, entry)
         database.putBytes(entry.path, entry.content.toUTF())
+    }
+    fun remove(database: Repository, content: MutableMap<String, DatabaseStringEntry>, path: String) = runBlocking{
+        if (content.containsKey(path)) {
+            content.remove(path)
+            database.remove(path)
+        }
     }
     fun containsContent(database: RepoWrapper, content: Map<String, DatabaseStringEntry>)= runBlocking {
         for (entry in content.values) {
