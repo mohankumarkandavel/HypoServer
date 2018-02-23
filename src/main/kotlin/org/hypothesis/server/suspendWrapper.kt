@@ -1,7 +1,6 @@
 @file:JvmName("suspend")
 package org.hypothesis.server
 
-import kotlinx.coroutines.experimental.async
 import kotlinx.coroutines.experimental.runBlocking
 import org.fejoa.chunkcontainer.BoxSpec
 import org.fejoa.crypto.CryptoHelper
